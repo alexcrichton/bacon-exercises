@@ -1,11 +1,19 @@
 const output = document.getElementById('console-output');
 
+export function iprint(s) {
+  const element = document.createElement('span');
+  element.classList.add('info');
+  element.innerText = s;
+  output.appendChild(element);
+}
+
 export function print(s) {
   output.innerHTML += s;
 }
 
 export function eprint(s) {
   const element = document.createElement('span');
+  element.classList.add('error');
   element.innerText = s;
   output.appendChild(element);
 }

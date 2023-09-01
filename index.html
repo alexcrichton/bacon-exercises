@@ -32,7 +32,8 @@
     "node:child_process": "./src/shims.js",
     "node:process": "./src/shims.js",
     "path": "./src/shims.js",
-    "terser": "./src/shims.js"
+    "terser": "./src/shims.js",
+    "who-to-greet": "./src/who-to-greet.js"
   }
 }
 </script>
@@ -57,23 +58,42 @@
     component and solve the problem at hand. Select an exercise, read it over,
     and then upload a component to execute it via the button below.
   </p>
+  <p>
+    Each exercise is accompanied with a
+    <a href="https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md">WIT <code>world</code></a>
+    which indicates what the "shape" of uploaded components must look like. This
+    specifies what can be imported into a component and what must be exported
+    from a component. Most exercises work with the "command world" which means
+    that a run and/or main function is exported and programs have access to
+    utilities like stdio, clocks, randomness, etc. Some interfaces, such as
+    WASI sockets, are not available on the web at this time (this is also sort
+    of demo quality still).
+  </p>
+  <p>
+    Exercises will log the components output and/or errors to the "Console
+    output" section below. The goal of each exercise is to upload a component
+    that prints the expected output. If the expected output is not produced or
+    an error happens the "red X" will light up. When the exercise is completed
+    the green checkmark will light up instead.
+  </p>
+  <p>
+  </p>
 
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#hello">Hello, World!</a></li>
-    <!-- <li><a data-toggle="tab" href="#menu1">Menu 1</a></li> -->
+    <li><a data-toggle="tab" href="#hello-name">Hello, $name!</a></li>
   </ul>
 
   <div class="tab-content">
-    <div id="hello" class="tab-pane fade in active">
+    <div id="hello" class="tab-pane in active">
       <h3>Hello, World!</h3>
       <p>
         To learn about components here you need to upload a component which
-        prints "Hello, world!" to the console.
+        prints "Hello, world!", with a newline, to the console.
 
         Printing should happen via standard language I/O interfaces. The
         <a href="https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md">WIT <code>world</code></a>
-        for
-        available to this exercie's components is:
+        for available to this exercie's components is:
       </p>
       <pre>
 world demo {
@@ -82,10 +102,33 @@ world demo {
 </pre>
 
     </div>
-    <!-- <div id="menu1" class="tab-pane fade"> -->
-    <!--   <h3>Menu 1</h3> -->
-    <!--   <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p> -->
-    <!-- </div> -->
+    <div id="hello-name" class="tab-pane in">
+      <h3>Hello, $name!</h3>
+      <p>
+	Now that you've built a single component, let's start exploring the
+        component model. Here you're still going to print a greeting, but you
+        need to greet someone specific to the test. The way this will be done is
+        that you're going to import a function from the outer environment which
+        returns a name that you're going to greet.
+      </p>
+      <p>
+	Think of this as a sort of rudimentary pluging system. The
+        <code>world</code> below describes the plugin API (just a single
+        function) and you're trying to consume this function.
+      </p>
+      <p>
+        This example will run the component twice to ensure that the correct
+        name isn't hardcoded.
+      </p>
+      <pre>
+world demo {
+  include <a href="https://github.com/bytecodealliance/wasmtime/blob/main/crates/wasi/wit/deps/cli/command.wit">wasi:cli/command</a>
+
+  import who-to-greet: func() -&gt; string
+}
+</pre>
+
+    </div>
   </div>
   <hr/>
 

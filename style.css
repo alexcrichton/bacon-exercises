@@ -21,3 +21,11 @@
 .result.selected {
   opacity: 1;
 }
+
+#console-output .info {
+  color: green;
+}
+
+#console-output .error {
+  color: red;
+}

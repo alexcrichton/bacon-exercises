@@ -1,14 +1,15 @@
 import { transpile } from '@bytecodealliance/jco';
-import { eprint } from './wasi-io.js';
+import { iprint, eprint } from './wasi-io.js';
+import { reset_who_to_greet } from 'who-to-greet';
 
 const input = document.getElementById('file');
 const output = document.getElementById('console-output');
-const ok = document.getElementById('ok');
-const bad = document.getElementById('bad');
+const okDiv = document.getElementById('ok');
+const badDiv = document.getElementById('bad');
 
 input.onchange = e => {
-  ok.classList.remove("selected");
-  bad.classList.remove("selected");
+  okDiv.classList.remove("selected");
+  badDiv.classList.remove("selected");
   input.disabled = true;
   output.innerHTML = '';
   const exercise = document.querySelector('.active.tab-pane').id;
@@ -24,7 +25,7 @@ input.onchange = e => {
       .catch(e => {
         console.log('caught error', e);
         eprint(e.toString());
-        bad.classList.add("selected");
+        badDiv.classList.add("selected");
       })
       .finally(() => {
         input.disabled = false;
@@ -34,22 +35,35 @@ input.onchange = e => {
 input.disabled = false;
 
 async function runExercise(exercise, content) {
-  const run = await compileExercise(content);
-  run();
-
-  let expected = "";
+  let ok = false;
   switch (exercise) {
     case 'hello':
-      expected = "Hello, world!\n";
+      const run = await compileExercise(content);
+      run();
+      ok = output.innerText == "Hello, world!\n";
+      break;
+    case 'hello-name':
+      const run1 = await compileExercise(content);
+      const name1 = reset_who_to_greet();
+      iprint(`Expecting a greeting for ${name1}\n`);
+      run1();
+      ok = output.innerText.endsWith(`Hello, ${name1}!\n`);
+      if (ok) {
+        const run2 = await compileExercise(content);
+        const name2 = reset_who_to_greet();
+        iprint(`Expecting a greeting for ${name2}\n`);
+        run2();
+        ok = output.innerText.endsWith(`Hello, ${name2}!\n`);
+      }
       break;
     default:
       throw new Error("unknown exercise");
   }
 
-  if (expected == output.innerText) {
-    ok.classList.add("selected");
+  if (ok) {
+    okDiv.classList.add("selected");
   } else {
-    bad.classList.add("selected");
+    badDiv.classList.add("selected");
   }
 
 }
@@ -62,16 +76,21 @@ async function compileExercise(content) {
     wasiShim: true,
     nodejsCompat: false,
     noTypescript: true,
+
     // keep everything in the blob url created below to avoid fetches to files
     // that don't exist outside of the blob.
-    base64Cutoff: 2 ** 32 - 1
+    base64Cutoff: 2 ** 32 - 1,
   };
   const result = await transpile(content, transpileOpts);
 
   for (let i of result.imports) {
-    if (!i.startsWith("@bytecodealliance/preview2-shim")) {
-      throw new Error(`Unknown import: ${i}\n`);
+    if (i.startsWith("@bytecodealliance/preview2-shim")) {
+      continue;
     }
+
+    if (i == 'who-to-greet')
+      continue;
+    throw new Error(`Unknown import: ${i}\n`);
   }
 
   const source = result.files['demo.js'];
@@ -82,3 +101,15 @@ async function compileExercise(content) {
   }
   return mod['wasi:cli/run'].run;
 }
+
+// tab management, sorta
+$('.nav a').click(function(e) {
+  e.preventDefault();
+  $(this).tab('show');
+});
+$("ul.nav-tabs > li > a").on("shown.bs.tab", function(e) {
+  var id = $(e.target).attr("href").substr(1);
+  window.location.hash = id;
+});
+const hash = window.location.hash;
+$('.nav a[href="' + hash + '"]').tab('show');
