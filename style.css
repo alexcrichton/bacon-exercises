@@ -1,0 +1,23 @@
+#ok {
+  background: green;
+  color: white;
+}
+
+#bad {
+  background: red;
+  color: white;
+}
+
+.result {
+  display: inline-block;
+  padding: 5px 20px;
+  font-size: 300%;
+  border-radius: 10px;
+  float: right;
+  margin: 0 10px;
+  opacity: 0.2;
+}
+
+.result.selected {
+  opacity: 1;
+}

@@ -42,6 +42,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   </head>
@@ -53,7 +54,8 @@
   <h2>Component Model Exercises</h2>
   <p>
     Each of the exercises below has a problem where your goal is to upload a
-    component and solve the problem at hand.
+    component and solve the problem at hand. Select an exercise, read it over,
+    and then upload a component to execute it via the button below.
   </p>
 
   <ul class="nav nav-tabs">
@@ -87,7 +89,10 @@ world demo {
   </div>
   <hr/>
 
-      <p>Upload a component: <input disabled=true id='file' type='file'></input></p>
+  <div id='bad' class='result'>✕</div>
+  <div id='ok' class='result'>✓</div>
+
+      <label for=file>Upload a component:</label> <input disabled=true id='file' type='file'></input>
       <h4>Console output</h4>
       <pre id='console-output'>
 </pre>

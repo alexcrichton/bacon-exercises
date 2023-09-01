@@ -3,7 +3,12 @@ import { eprint } from './wasi-io.js';
 
 const input = document.getElementById('file');
 const output = document.getElementById('console-output');
+const ok = document.getElementById('ok');
+const bad = document.getElementById('bad');
+
 input.onchange = e => {
+  ok.classList.remove("selected");
+  bad.classList.remove("selected");
   input.disabled = true;
   output.innerHTML = '';
   const exercise = document.querySelector('.active.tab-pane').id;
@@ -19,6 +24,7 @@ input.onchange = e => {
       .catch(e => {
         console.log('caught error', e);
         eprint(e.toString());
+        bad.classList.add("selected");
       })
       .finally(() => {
         input.disabled = false;
@@ -38,6 +44,12 @@ async function runExercise(exercise, content) {
       break;
     default:
       throw new Error("unknown exercise");
+  }
+
+  if (expected == output.innerText) {
+    ok.classList.add("selected");
+  } else {
+    bad.classList.add("selected");
   }
 
 }
