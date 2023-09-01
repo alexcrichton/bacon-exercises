@@ -17,6 +17,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
     - run: npm install
     - name: Deploy to gh-pages
       uses: JamesIves/github-pages-deploy-action@v4
