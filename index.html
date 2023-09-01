@@ -1,0 +1,103 @@
+<!doctype html>
+<script type="importmap">
+{
+  "imports": {
+    "@bytecodealliance/preview2-shim/cli": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/cli.js",
+    "@bytecodealliance/preview2-shim/clocks": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/clocks.js",
+    "@bytecodealliance/preview2-shim/filesystem": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/filesystem.js",
+    "@bytecodealliance/preview2-shim/http": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/http.js",
+    "@bytecodealliance/preview2-shim/io": "./src/wasi-io.js",
+    "@bytecodealliance/preview2-shim/logging": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/logging.js",
+    "@bytecodealliance/preview2-shim/poll": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/poll.js",
+    "@bytecodealliance/preview2-shim/random": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/random.js",
+    "@bytecodealliance/preview2-shim/sockets": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/sockets.js",
+    "@bytecodealliance/preview2-shim/sockets": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/sockets.js",
+    "@bytecodealliance/jco": "./node_modules/@bytecodealliance/jco/src/api.js",
+    "fs/promises": "./src/shims.js",
+    "url": "./src/shims.js",
+    "chalk-template": "./src/shims.js",
+    "#ora": "./src/shims.js",
+    "node:crypto": "./src/shims.js",
+    "node:path": "./src/shims.js",
+    "node:fs/promises": "./src/shims.js",
+    "node:os": "./src/shims.js",
+    "node:child_process": "./src/shims.js",
+    "node:process": "./src/shims.js",
+    "path": "./src/shims.js",
+    "terser": "./src/shims.js"
+  }
+}
+</script>
+<html lang="en">
+  <head>
+    <title>Component Exercises</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+
+
+<div class="container">
+  <h2>Component Model Exercises</h2>
+  <p>
+    Each of the exercises below has a problem where your goal is to upload a
+    component and solve the problem at hand.
+  </p>
+
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#hello">Hello, World!</a></li>
+    <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
+    <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+    <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="hello" class="tab-pane fade in active">
+      <h3>Hello, World!</h3>
+      <p>
+        To learn about components here you need to upload a component which
+        prints "Hello, world!" to the console.
+
+        Printing should happen via standard language I/O interfaces. The
+        <a href="https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md">WIT <code>world</code></a>
+        for
+        available to this exercie's components is:
+      </p>
+      <pre>
+world demo {
+  include <a href="https://github.com/bytecodealliance/wasmtime/blob/main/crates/wasi/wit/deps/cli/command.wit">wasi:cli/command</a>
+}
+</pre>
+
+    </div>
+    <div id="menu1" class="tab-pane fade">
+      <h3>Menu 1</h3>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+    <div id="menu2" class="tab-pane fade">
+      <h3>Menu 2</h3>
+      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+    </div>
+    <div id="menu3" class="tab-pane fade">
+      <h3>Menu 3</h3>
+      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+    </div>
+  </div>
+  <hr/>
+
+      <p>Upload a component: <input id='file' type='file'></input></p>
+      <h4>Console output</h4>
+      <pre id='console-output'>
+</pre>
+</div>
+
+<i class="bi bi-check-lg"></i>
+
+    <script type=module src='./src/index.js'></script>
+  </body>
+</html>
+
