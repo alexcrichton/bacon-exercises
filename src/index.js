@@ -1,7 +1,5 @@
 import { transpile } from '@bytecodealliance/jco';
-
 import { eprint } from './wasi-io.js';
-
 
 const input = document.getElementById('file');
 const output = document.getElementById('console-output');
@@ -27,6 +25,7 @@ input.onchange = e => {
       })
   }
 };
+input.disabled = false;
 
 async function runExercise(exercise, content) {
   const run = await compileExercise(content);
