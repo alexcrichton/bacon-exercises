@@ -19,6 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: npm install
+    - run: rm .gitignore
     - name: Deploy to gh-pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
