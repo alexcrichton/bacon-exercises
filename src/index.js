@@ -3,6 +3,7 @@ import { iprint, eprint } from './wasi-io.js';
 import { reset_who_to_greet } from 'who-to-greet';
 import { $reset_candidates } from 'example:demo/greeter-candidates';
 import { $fixRandomU64, $unfixRandomU64 } from './random-shim.js';
+import { _setEnv } from "@bytecodealliance/preview2-shim/cli";
 
 const input = document.getElementById('file');
 const output = document.getElementById('console-output');
@@ -29,6 +30,7 @@ input.onchange = e => {
       })
       .finally(() => {
         $unfixRandomU64();
+        _setEnv({});
         input.disabled = false;
       })
   }
@@ -92,6 +94,15 @@ async function runExercise(exercise, content) {
       } else {
         ok = output.innerText == "Hello, Jasper!\n";
       }
+      break;
+    }
+    case 'intercept-imports': {
+      // Surely no one would read this source code and try to upload something
+      // which doesn't achieve the result through composition. Right? Right?
+      _setEnv({CAN_I_PRINT_THE_ANSWER: 'no'});
+      const run = getCommand(await compileExercise(content));
+      run();
+      ok = output.innerText.indexOf("The ocean ate the last of the land") !== -1;
       break;
     }
     default:

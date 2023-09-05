@@ -243,24 +243,31 @@ interface greeter {
         there's nothing in the environment that's extra to import.
       </p>
       <pre>
+package example:demo
+
 world demo {
   // ... nothing extra for this exercise
 }
 </pre>
     </div>
 
-    <div id="intercep-imports" class="tab-pane in">
+    <div id="intercept-imports" class="tab-pane in">
       <h3>Intercepting Imports</h3>
       <p>
-        Here's a component (LINK). If executed it prints "Sorry, I'm not
-        allowed to print the answer". Can you trick it into printing the
-        answer?
+        <a href="./exercises/intercept-imports/intercept-imports.wasm">Here's a component</a>. That
+        If executed it prints "Sorry, I'm not allowed to print the answer". Can
+        you trick it into printing the answer?
+      </p>
+      <p>
+        The WIT <code>world</code> for this exercise includes nothing extra.
+        Perhaps a good starting point is to take the component above and submit
+        it here to see what happens?
       </p>
       <pre>
-world demo {
-  include <a href="https://github.com/bytecodealliance/wasmtime/blob/main/crates/wasi/wit/deps/cli/reactor.wit">wasi:cli/reactor</a>
+package example:demo
 
-  import
+world demo {
+  // ... nothing extra for this exercise
 }
 </pre>
     </div>
