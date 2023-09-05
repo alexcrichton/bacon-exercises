@@ -1,0 +1,13 @@
+[package]
+name = "hello-name"
+version = "0.1.0"
+edition = "2021"
+
+[package.metadata.component]
+package = "component:hello-name"
+
+[package.metadata.component.target]
+path = 'wit'
+
+[dependencies]
+cargo-component-bindings = { git = "https://github.com/bytecodealliance/cargo-component" }
