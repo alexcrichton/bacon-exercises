@@ -1,6 +1,7 @@
 import { transpile } from '@bytecodealliance/jco';
 import { iprint, eprint } from './wasi-io.js';
 import { reset_who_to_greet } from 'who-to-greet';
+import { $reset_candidates } from 'example:demo/greeter-candidates';
 
 const input = document.getElementById('file');
 const output = document.getElementById('console-output');
@@ -22,7 +23,6 @@ input.onchange = e => {
     runExercise(exercise, content)
       .catch(e => {
         console.log('caught error', e);
-        console.log(e);
         eprint(e.toString());
         badDiv.classList.add("selected");
       })
@@ -58,6 +58,25 @@ async function runExercise(exercise, content) {
       break;
     case 'hello-structured': {
       const output = await compileExercise(content);
+      const greeter = output['example:demo/greeter'];
+      if (greeter === undefined) {
+        eprint(`Expected export of "example:demo/greeter" not found`)
+        ok = false;
+      } else {
+        const expected = $reset_candidates();
+        const greeting = greeter.greet();
+
+        if (expected.saying !== greeting.saying) {
+          eprint(`Saying of "${greeting.saying}" did not match expectation of "${expected.saying}"`);
+          ok = false;
+        } else if (expected.legoCount !== greeting.legoCount) {
+          eprint(`Lego count of ${greeting.legoCount} did not match expectation of ${expected.legoCount}`);
+          ok = false;
+        } else {
+          iprint("Greeting matched!");
+          console.log(expected, greeting);
+        }
+      }
       break;
     }
     default:
