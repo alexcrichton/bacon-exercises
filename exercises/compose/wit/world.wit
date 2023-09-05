@@ -1,0 +1,7 @@
+package a:b
+
+world foo {
+  import wasi:random/random
+
+  export who-to-greet: func() -> string
+}

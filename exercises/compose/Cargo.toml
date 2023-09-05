@@ -1,0 +1,26 @@
+[package]
+name = "compose"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cargo-component-bindings = { git = "https://github.com/bytecodealliance/cargo-component" }
+obfstr = "0.4.3"
+
+[lib]
+crate-type = ["cdylib"]
+
+[package.metadata.component]
+package = "component:compose"
+
+[package.metadata.component.target]
+path = "wit"
+
+[package.metadata.component.target.dependencies]
+"wasi:random" = "0.2.0-rc"
+
+[package.metadata.component.dependencies]
+
+[package.metadata.component.registries]
+default = "https://preview-registry.bytecodealliance.org/"
+
