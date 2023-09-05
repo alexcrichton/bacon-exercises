@@ -21,7 +21,8 @@ path = "wit"
 [package.metadata.component.target.dependencies]
 "wasi:cli" = "0.2.0-rc"
 
-[package.metadata.component.dependencies]
-
 [package.metadata.component.registries]
 default = "https://preview-registry.bytecodealliance.org/"
+
+[profile.release]
+lto = true
