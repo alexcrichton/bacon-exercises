@@ -1,0 +1,47 @@
+package example:demo
+
+world demo {
+  // This interface, defined below, can be imported into your component. This
+  // is used to determine how to implement the export below.
+  import who-to-greet
+
+  // This is what you need to implement.
+  export greeter
+}
+
+interface who-to-greet {
+  // Calling this function, which is imported into the component, will return
+  // a list of candidates which needs to be handled to determine the return
+  // value of the exported `greet` function.
+  greeting-candidates: func() -> list<candidate>
+
+  variant candidate {
+    // This person is a hermit, they prefer to be left alone, don't greet them.
+    hermit(person),
+
+    // This person is excited, please greet them.
+    excited(person),
+  }
+
+  record person {
+    // This person's name
+    name: string,
+    // You're only interested in greeting lego enthusiasts, so require this
+    // to be present and greater than zero.
+    lego-count: option<u32>,
+  }
+}
+
+interface greeter {
+  // You'll implement this function.
+  greet: func() -> result<greeting, error>
+
+  record greeting {
+    // Manufacture "Hello, $name!" given who you're greeting.
+    saying: string,
+    // how many legos they claim to have
+    lego-count: u32,
+  }
+
+  type error = string
+}
