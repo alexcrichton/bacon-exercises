@@ -1,0 +1,5 @@
+package a:a
+
+world foo {
+    include wasi:cli/command
+}
