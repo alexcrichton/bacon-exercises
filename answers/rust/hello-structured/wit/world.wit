@@ -3,17 +3,17 @@ package example:demo
 world demo {
   // This interface, defined below, can be imported into your component. This
   // is used to determine how to implement the export below.
-  import who-to-greet
+  import greeter-candidates
 
   // This is what you need to implement.
   export greeter
 }
 
-interface who-to-greet {
+interface greeter-candidates {
   // Calling this function, which is imported into the component, will return
   // a list of candidates which needs to be handled to determine the return
   // value of the exported `greet` function.
-  greeting-candidates: func() -> list<candidate>
+  get: func() -> list<candidate>
 
   variant candidate {
     // This person is a hermit, they prefer to be left alone, don't greet them.

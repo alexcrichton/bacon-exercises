@@ -8,10 +8,8 @@ const okDiv = document.getElementById('ok');
 const badDiv = document.getElementById('bad');
 
 input.onchange = e => {
-  okDiv.classList.remove("selected");
-  badDiv.classList.remove("selected");
   input.disabled = true;
-  output.innerHTML = '';
+  reset();
   const exercise = document.querySelector('.active.tab-pane').id;
   console.log('running exercise', exercise);
 
@@ -24,6 +22,7 @@ input.onchange = e => {
     runExercise(exercise, content)
       .catch(e => {
         console.log('caught error', e);
+        console.log(e);
         eprint(e.toString());
         badDiv.classList.add("selected");
       })
@@ -34,28 +33,33 @@ input.onchange = e => {
 };
 input.disabled = false;
 
+function reset() {
+  okDiv.classList.remove("selected");
+  badDiv.classList.remove("selected");
+  output.innerHTML = '';
+}
+
 async function runExercise(exercise, content) {
-  let ok = false;
+  let ok = true;
   switch (exercise) {
     case 'hello':
-      const run = await compileExercise(content);
+      const run = getCommand(await compileExercise(content));
       run();
       ok = output.innerText == "Hello, world!\n";
       break;
     case 'hello-name':
-      const run1 = await compileExercise(content);
-      const name1 = reset_who_to_greet();
-      iprint(`Expecting a greeting for ${name1}\n`);
-      run1();
-      ok = output.innerText.endsWith(`Hello, ${name1}!\n`);
-      if (ok) {
-        const run2 = await compileExercise(content);
-        const name2 = reset_who_to_greet();
-        iprint(`Expecting a greeting for ${name2}\n`);
-        run2();
-        ok = output.innerText.endsWith(`Hello, ${name2}!\n`);
+      for (let i = 0; i < 2 && ok; i++) {
+        const run = getCommand(await compileExercise(content));
+        const name = reset_who_to_greet();
+        iprint(`Expecting a greeting for ${name}\n`);
+        run();
+        ok = output.innerText.endsWith(`Hello, ${name}!\n`);
       }
       break;
+    case 'hello-structured': {
+      const output = await compileExercise(content);
+      break;
+    }
     default:
       throw new Error("unknown exercise");
   }
@@ -90,12 +94,17 @@ async function compileExercise(content) {
 
     if (i == 'who-to-greet')
       continue;
+    if (i.startsWith("example:demo/"))
+      continue;
     throw new Error(`Unknown import: ${i}\n`);
   }
 
   const source = result.files['demo.js'];
   const url = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
-  const mod = await import(url);
+  return await import(url);
+}
+
+function getCommand(mod) {
   if (mod['wasi:cli/run'] === undefined) {
     throw new Error("export `wasi:cli/run` not found");
   }
@@ -105,6 +114,7 @@ async function compileExercise(content) {
 // tab management, sorta
 $('.nav a').click(function(e) {
   e.preventDefault();
+  reset();
   $(this).tab('show');
 });
 $("ul.nav-tabs > li > a").on("shown.bs.tab", function(e) {

@@ -33,7 +33,8 @@
     "node:process": "./src/shims.js",
     "path": "./src/shims.js",
     "terser": "./src/shims.js",
-    "who-to-greet": "./src/who-to-greet.js"
+    "who-to-greet": "./src/who-to-greet.js",
+    "example:demo/greeter-candiates": "./src/greeter-candiates.js"
   }
 }
 </script>
@@ -82,6 +83,9 @@
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#hello">Hello, World!</a></li>
     <li><a data-toggle="tab" href="#hello-name">Hello, $name!</a></li>
+    <li><a data-toggle="tab" href="#hello-structured">{ Hello: "$name!" }</a></li>
+    <li><a data-toggle="tab" href="#compose">Composition Intro</a></li>
+    <li><a data-toggle="tab" href="#intercept-imports">Intercepting Imports</a></li>
   </ul>
 
   <div class="tab-content">
@@ -93,12 +97,17 @@
 
         Printing should happen via standard language I/O interfaces. The
         <a href="https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md">WIT <code>world</code></a>
-        for available to this exercie's components is:
+        for available to this exercie's components is below.
       </p>
       <pre>
-world demo {
-  include <a href="https://github.com/bytecodealliance/wasmtime/blob/main/crates/wasi/wit/deps/cli/command.wit">wasi:cli/command</a>
+package example:demo
+
+world hello {
+  // ... nothing extra for this exercise
 }
+<!--
+  include <a href="https://github.com/bytecodealliance/wasmtime/blob/main/crates/wasi/wit/deps/cli/command.wit">wasi:cli/command</a>
+-->
 </pre>
 
     </div>
@@ -112,22 +121,134 @@ world demo {
         returns a name that you're going to greet.
       </p>
       <p>
-	Think of this as a sort of rudimentary pluging system. The
+	Think of this as a sort of rudimentary plugin system. The
         <code>world</code> below describes the plugin API (just a single
         function) and you're trying to consume this function.
       </p>
       <p>
-        This example will run the component twice to ensure that the correct
-        name isn't hardcoded.
+        Your job is to have a component which prints "Hello, $name!" when the
+        "$name" comes from the `who-to-greet` function imported into the
+        component. This example will run the component twice to ensure that
+        the correct name isn't hardcoded. The name to print is additionally
+        randomized each time.
       </p>
       <pre>
-world demo {
-  include <a href="https://github.com/bytecodealliance/wasmtime/blob/main/crates/wasi/wit/deps/cli/command.wit">wasi:cli/command</a>
+package example:demo
 
+world hello-name {
   import who-to-greet: func() -&gt; string
 }
 </pre>
 
+    </div>
+
+    <div id="hello-structured" class="tab-pane in">
+      <h3>{ Hello: "$name!" }</h3>
+      <p>
+        One of the major features of the component model is the grammar of
+        types that you have available to you. For example in addition to
+        strings which we've already seen the component model
+        supports lists, records, and variants. These map into guest and host
+        languages as appropriate for each language.
+      </p>
+      <p>
+        Additionally the component model supports types called "resources"
+        which are handles to a type implemented somewhere else. They're similar
+        to file descriptors in Unix and come with static and dynamic guarantees
+        about validity and non-forgability in the component model.
+      </p>
+      <p>
+        In this exercise your task is to explore this type structure in the
+        component model. The imports into the world need to be consumed to
+        create the final output value that your export is supposed to generate.
+      </p>
+      <p>
+        Note that here you're not going to create a "reactor" unlike in previous
+        excercises where a "command" was made instead. There's no
+        <code>main</code> function to implement.
+      </p>
+<!--
+  // Base WASI support is included here
+  include <a href="https://github.com/bytecodealliance/wasmtime/blob/f10d665bb9cacceee6051989e99c0934c542ad84/crates/wasi/wit/main.wit#L5">wasi:cli/reactor</a>
+-->
+      <pre>
+package example:demo
+
+world demo {
+  // This interface, defined below, can be imported into your component. This
+  // is used to determine how to implement the export below.
+  import greeter-candidates
+
+  // This is what you need to implement.
+  export greeter
+}
+
+interface greeter-candidates {
+  // Calling this function, which is imported into the component, will return
+  // a list of candidates which needs to be handled to determine the return
+  // value of the exported `greet` function.
+  get: func() -&gt; list&lt;candidate&gt;
+
+  variant candidate {
+    // This person is a hermit, they prefer to be left alone, don't greet them.
+    hermit(person),
+
+    // This person is excited, please greet them.
+    excited(person),
+  }
+
+  record person {
+    // This person's name
+    name: string,
+    // You're only interested in greeting lego enthusiasts, so require this
+    // to be present and greater than zero.
+    lego-count: option&lt;u32&gt;,
+  }
+}
+
+interface greeter {
+  // You'll implement this function.
+  greet: func() -&gt; result&lt;greeting, error&gt;
+
+  record greeting {
+    // Manufacture "Hello, $name!" given who you're greeting.
+    saying: string,
+    // how many legos they claim to have
+    lego-count: u32,
+  }
+
+  type error = string
+}
+</pre>
+    </div>
+
+    <div id="compose" class="tab-pane in">
+      <h3>Composition Intro</h3>
+      <p>
+        Here's a component (LINK). Call it and greet me with what that says.
+        Probably use structured types for funsies?
+      </p>
+      <pre>
+world demo {
+  import TODO
+}
+</pre>
+    </div>
+
+    <div id="intercep-imports" class="tab-pane in">
+      <h3>Intercepting Imports</h3>
+      <p>
+        Here's a component (LINK). If executed it prints "Sorry, I'm not
+        allowed to print the answer". Can you trick it into printing the
+        answer?
+      </p>
+      <pre>
+world demo {
+  include <a href="https://github.com/bytecodealliance/wasmtime/blob/main/crates/wasi/wit/deps/cli/reactor.wit">wasi:cli/reactor</a>
+
+  import
+}
+</pre>
     </div>
   </div>
   <hr/>

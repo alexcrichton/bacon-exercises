@@ -1,18 +1,18 @@
 cargo_component_bindings::generate!();
 
-use bindings::example::demo::who_to_greet;
+use bindings::example::demo::greeter_candidates;
 use bindings::exports::example::demo::greeter;
 
 struct Component;
 
 impl greeter::Guest for Component {
     fn greet() -> Result<greeter::Greeting, String> {
-        let candidates = who_to_greet::greeting_candidates();
+        let candidates = greeter_candidates::get();
 
         for candidate in candidates {
             let person = match candidate {
-                who_to_greet::Candidate::Hermit(_) => continue,
-                who_to_greet::Candidate::Excited(p) => p,
+                greeter_candidates::Candidate::Hermit(_) => continue,
+                greeter_candidates::Candidate::Excited(p) => p,
             };
             let lego_count = match person.lego_count {
                 Some(n) if n > 0 => n,
