@@ -2,6 +2,7 @@ import { transpile } from '@bytecodealliance/jco';
 import { iprint, eprint } from './wasi-io.js';
 import { reset_who_to_greet } from 'who-to-greet';
 import { $reset_candidates } from 'example:demo/greeter-candidates';
+import { $fixRandomU64, $unfixRandomU64 } from './random-shim.js';
 
 const input = document.getElementById('file');
 const output = document.getElementById('console-output');
@@ -27,6 +28,7 @@ input.onchange = e => {
         badDiv.classList.add("selected");
       })
       .finally(() => {
+        $unfixRandomU64();
         input.disabled = false;
       })
   }
@@ -42,12 +44,13 @@ function reset() {
 async function runExercise(exercise, content) {
   let ok = true;
   switch (exercise) {
-    case 'hello':
+    case 'hello': {
       const run = getCommand(await compileExercise(content));
       run();
       ok = output.innerText == "Hello, world!\n";
       break;
-    case 'hello-name':
+    }
+    case 'hello-name': {
       for (let i = 0; i < 2 && ok; i++) {
         const run = getCommand(await compileExercise(content));
         const name = reset_who_to_greet();
@@ -56,6 +59,7 @@ async function runExercise(exercise, content) {
         ok = output.innerText.endsWith(`Hello, ${name}!\n`);
       }
       break;
+    }
     case 'hello-structured': {
       const output = await compileExercise(content);
       const greeter = output['example:demo/greeter'];
@@ -76,6 +80,17 @@ async function runExercise(exercise, content) {
           iprint("Greeting matched!");
           console.log(expected, greeting);
         }
+      }
+      break;
+    }
+    case 'compose': {
+      const n = $fixRandomU64();
+      const run = getCommand(await compileExercise(content));
+      run();
+      if (n % 2n == 0n) {
+        ok = output.innerText == "Hello, Luna!\n";
+      } else {
+        ok = output.innerText == "Hello, Jasper!\n";
       }
       break;
     }

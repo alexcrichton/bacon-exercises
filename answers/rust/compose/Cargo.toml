@@ -1,0 +1,13 @@
+[package]
+name = "compose-answer"
+version = "0.1.0"
+edition = "2021"
+
+[package.metadata.component]
+package = "component:compose"
+
+[package.metadata.component.dependencies]
+'demo:compose' = { path = '../../../exercises/compose/compose.wasm' }
+
+[dependencies]
+cargo-component-bindings = { git = "https://github.com/bytecodealliance/cargo-component" }

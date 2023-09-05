@@ -16,11 +16,11 @@
     "@bytecodealliance/preview2-shim/poll":
       "https://unpkg.com/@bytecodealliance/preview2-shim@0.0.13/lib/browser/poll.js",
     "@bytecodealliance/preview2-shim/random":
-      "https://unpkg.com/@bytecodealliance/preview2-shim@0.0.13/lib/browser/random.js",
+      "./src/random-shim.js",
     "@bytecodealliance/preview2-shim/sockets":
       "https://unpkg.com/@bytecodealliance/preview2-shim@0.0.13/lib/browser/sockets.js",
     "@bytecodealliance/jco":
-      "https://unpkg.com/@bytecodealliance/jco@0.11.0/src/api.js",
+      "https://unpkg.com/@bytecodealliance/jco@0.11.1/src/api.js",
     "fs/promises": "./src/shims.js",
     "url": "./src/shims.js",
     "chalk-template": "./src/shims.js",
@@ -230,12 +230,21 @@ interface greeter {
     <div id="compose" class="tab-pane in">
       <h3>Composition Intro</h3>
       <p>
-        Here's a component (LINK). Call it and greet me with what that says.
-        Probably use structured types for funsies?
+        <a href="./exercises/compose/compose.wasm">Here's a component</a>. That
+        component exports a function which returns a name. The objective of this
+        exercise is to embed that component in your own via
+        <a href="https://github.com/bytecodealliance/wasm-tools/tree/main/crates/wasm-compose">composition</a>.
+        This exercise will look a lot like "Hello, $name!" from before except
+        that the name-to-print is inferred from the component rather than the
+        environment.
+      </p>
+      <p>
+        The greeting should be printed to stdout like before. This time though
+        there's nothing in the environment that's extra to import.
       </p>
       <pre>
 world demo {
-  import TODO
+  // ... nothing extra for this exercise
 }
 </pre>
     </div>
