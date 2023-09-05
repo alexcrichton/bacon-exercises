@@ -1,0 +1,5 @@
+package component:intercept-imports
+
+world example {
+    export wasi:cli/environment
+}
