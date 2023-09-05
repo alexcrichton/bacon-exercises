@@ -99,7 +99,12 @@ async function runExercise(exercise, content) {
     case 'intercept-imports': {
       // Surely no one would read this source code and try to upload something
       // which doesn't achieve the result through composition. Right? Right?
-      _setEnv({CAN_I_PRINT_THE_ANSWER: 'no'});
+      _setEnv({
+        YOU: "are on the right track",
+        PERHAPS: "the next variable is interesting",
+        CAN_I_PRINT_THE_ANSWER: 'no',
+        WHAT: "would happen if that variable changed",
+      });
       const run = getCommand(await compileExercise(content));
       run();
       ok = output.innerText.indexOf("The ocean ate the last of the land") !== -1;
