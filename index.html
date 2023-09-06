@@ -59,18 +59,20 @@
   <p>
     Each of the exercises below has a problem where your goal is to upload a
     component and solve the problem at hand. Select an exercise, read it over,
-    and then upload a component to execute it via the button below.
+    and then upload a component to execute it via the button below. The goal is
+    to learn a bit about the
+    <a href="https://component-model.bytecodealliance.org/introduction.html">Component Model</a>
+    while getting some hands-on experience with the tooling.
   </p>
   <p>
-    Each exercise is accompanied with a
-    <a href="https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md">WIT <code>world</code></a>
-    which indicates what the "shape" of uploaded components must look like. This
-    specifies what can be imported into a component and what must be exported
-    from a component. Most exercises work with the "command world" which means
-    that a run and/or main function is exported and programs have access to
-    utilities like stdio, clocks, randomness, etc. Some interfaces, such as
-    WASI sockets, are not available on the web at this time (this is also sort
-    of demo quality still).
+    Each exercise has a description of a
+    <a href="https://component-model.bytecodealliance.org/wit-overview.html">WIT <code>world</code></a>
+    which indicates what the "shape" of uploaded components must look like.
+    Components have access to WASI interfaces by default (e.g. they can print
+    to stdout) and the <code>world</code> for each exercise will describe
+    anything additional that the upload can use. Some interfaces, such as WASI
+    sockets, are not available on the web at this time (this is also sort of
+    demo quality still).
   </p>
   <p>
     Exercises will log the components output and/or errors to the "Console
@@ -233,7 +235,7 @@ interface greeter {
         <a href="./exercises/compose/compose.wasm">Here's a component</a>. That
         component exports a function which returns a name. The objective of this
         exercise is to embed that component in your own via
-        <a href="https://github.com/bytecodealliance/wasm-tools/tree/main/crates/wasm-compose">composition</a>.
+        <a href="https://component-model.bytecodealliance.org/creating-and-consuming/composing.html">composition</a>.
         This exercise will look a lot like "Hello, $name!" from before except
         that the name-to-print is inferred from the component rather than the
         environment.
