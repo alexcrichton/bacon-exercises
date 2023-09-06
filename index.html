@@ -55,7 +55,7 @@
 <a class="github-fork-ribbon" href="https://github.com/alexcrichton/bacon-exercises" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
 
 <div class="container">
-  <h2>Component Model Exercises</h2>
+  <h2>Component &#xF46B; Model Exercises</h2>
   <p>
     Each of the exercises below has a problem where your goal is to upload a
     component and solve the problem at hand. Select an exercise, read it over,
@@ -263,6 +263,43 @@ world demo {
         Perhaps a good starting point is to take the component above and submit
         it here to see what happens?
       </p>
+      <div class='hint'>
+	<a href="#hint1" class="btn btn-primary btn-default" data-toggle="collapse">Hint #1</a>
+	<div id="hint1" class="collapse">
+          The command <code>wasm-tools component wit</code> can be used to show
+          the WIT interface of a preexisting component. Running that on the
+          component provided above should yield:
+
+          <pre>package root:component
+
+world root {
+  import wasi:io/streams
+  import wasi:cli/environment
+  import wasi:cli/stdout
+
+  export wasi:cli/run
+}</pre>
+
+          This component is internally making a decision to not print the
+          answer, so how might it be using these imports/exports to make such a
+          decision?
+	</div>
+      </div>
+      <div class='hint'>
+	<a href="#hint2" class="btn btn-primary btn-default" data-toggle="collapse">Hint #2</a>
+	<div id="hint2" class="collapse">
+          If you upload your own component that prints out environment
+          variables, does anything look interesting?
+	</div>
+      </div>
+      <div class='hint'>
+	<a href="#hint3" class="btn btn-primary btn-default" data-toggle="collapse">Hint #3</a>
+	<div id="hint3" class="collapse">
+          Using composition from the previous exercise try making a component
+          which exports <code>wasi:cli/environment</code> and provides a custom
+          environment to the component.
+	</div>
+      </div>
       <pre>
 package example:demo
 
