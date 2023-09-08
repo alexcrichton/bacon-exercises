@@ -44,9 +44,9 @@ export const streams = {
   },
   blockingWrite(s, buf) {
     const text = decoder.decode(buf);
-    if (s == 1) {
+    if (s == 1 || s == 3) {
       print(text);
-    } else if (s == 2) {
+    } else if (s == 2 || s == 4) {
       eprint(text);
     } else {
       throw new Error(`[streams] write to ${s} of ${buf}: unkonwn descriptor`);
